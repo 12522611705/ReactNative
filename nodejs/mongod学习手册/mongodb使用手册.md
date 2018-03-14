@@ -1,3 +1,9 @@
+参考文档连接：
+1.https://www.yiibai.com/mongodb/mongodb_quick_guide.html
+2.https://cnodejs.org/topic/548e548e57fd3ae46b233500
+
+windows下启动mongodb数据库: mongo ./bin/mongo
+
 概览：
 1._id索引        db.runoob.ensureIndex({_id:1})
 2.单键索引       db.runoob.ensureIndex({x:1})
@@ -5,8 +11,7 @@
 4.复合索引       db.runoob.ensureIndex({x:1},{y:2})
 5.过期索引       db.runoob.ensureIndex({x:1},{expireAfterSeconds:10})
 6.全文索引       db.runoob.ensureIndex({'$**':'text'})
-7.地理位置索引    
-
+7.地理位置索引   db.runoob.ensureIndex({"w":"2d"})
 
 <!-- 查看集合的索引情况 -->
 db.runoob.getIndexes()
@@ -17,7 +22,6 @@ db.runoob.ensureIndex(Object,Object);
  * @params[0]  Object   索引的参数
  * @params[1]  [Object] 索引的属性
  */
-
 
 <!-- 创建过期索引 -->
 db.runoob.ensureIndex({x:1},{expireAfterSeconds:10}) 
@@ -31,7 +35,50 @@ ps: 过期所以过期后会数据会被删除
 2、过期所以不能是复合索引
 3、过期所以时间间隔最小为60s
 
-<!-- 全文索引 -->
+<!-- 创建唯一索引 -->
+db.runoob.ensureIndex({x:1},{unique:true}) 
+ps: 唯一索引如果已存在则不插入，不存在则插入
+/**
+ * @params[0]  Object   x为1代表正向排序，x为-1代表逆向排序
+ * @params[1]  [Object] true为创建唯一性
+ */
+
+<!-- 创建稀疏索引 -->
+db.runoob.ensureIndex({x:1},{sparse:true}) 
+/**
+ * @params[0]  Object   x为1代表正向排序，x为-1代表逆向排序
+ * @params[1]  [Object] true为创建唯一性
+ */
+
+<!-- 创建地理位置索引 -->
+一、2D索引：平面地理位置索引
+db.runoob.ensureIndex({"w":"2d"}) //创建
+-位置表示方式：经纬度[经度，纬度]
+-取值范围：经度[-180,180],纬度[-90，90]
+使用：
+db.runoob.ensureIndex({"w":{$near:[1,2],$maxDistance:10}});
+-$near:[1,2] //默认返回100个相近的点
+-$maxDistance:10 //限制长度10个
+
+1.形状的表示方式：
+$box:矩形，使用   {$box:[[<x1>,<y1>],[<x2>,<y2>]]}表示
+$center:圆形，使用   {$center:[[<x1>,<y1>],r]表示
+$polygon:多边形，使用  {$polygon:[[<x1>,<y1>],[<x2>,<y2>],[<x3>,<y3>]]}表示
+使用：
+db.runoob.ensureIndex({"w":{$geoWithin:{$box:[[0,0],[3,3]]}}});
+
+二、2D sphere 索引
+db.runoob.ensureIndex({"w":"2dsphere"}) //创建
+位置表示方式
+GeoJSON:描叙一个点，一条直线，多边形等形状
+格式：{type:'',coordinates:[<coordinates>]}
+查询索引和2d索引查询方式类似
+支持$minDistance与$maxDistance
+
+优点：加快索引相关的查询
+缺点：增加磁盘空间的消耗，降低写入性能
+
+<!-- 创建全文索引 -->
 db.runoob.ensureIndex({'$**':'text'})
 /**
  * @params[0]  Object   '$**'代表给集合中所有的字段创建一个索引
@@ -54,59 +101,3 @@ db.runoob.find({$text:{$search:"aa"}},{score:{$meta:"textScore"}}).store({score:
 4、MongoDB全文索引不支持中文
 
 
-git add readme.txt(添加到暂存区里) 
-git status(未提交时 出现红色提醒) 
-git commit -m ‘提交时的注释 描述’ 
-git status(提交后 出现绿色提醒) 
-git commit -a(自动更新变化的文件,auto) 
-git diff readme.txt(用来查看修改前后的对比,在有修改时使用) 
-git log(查看提交历史,倒序记录: 信息包括提交版本号,作者,时间,提交内容) 
-git log –pretty=oneline(简要查看历史,每次修改显示在一行) 
-git reset –hard HEAD^(把当前的版本回退到上1个版本) 
-git reset –hard HEAD^^(把当前的版本回退到上上1个版本) 
-git reset –hard HEAD~100(把当前的版本回退到上100个版本) 
-git checkout –readme.txt(会撤销修改但还没添加到缓存区stage的内容) 
-cat readme.txt (查看内容 )
-rm b.txt （删除文件）
-git rm -r --cached '*'(清空git暂存区)
-
-
-//分支创建 
-git branch (显示当前分支,如:master) 
-git branch sie-branch(创建分支) 
-git checkout sie-branch(切换到新分支) 
-
-//从已有的分支创建新的分支(如从master分支),创建一个dev(develop简写)分支(相当于复制分支) 
-git checkout -b dev 
-
-//另一种push分支,如果是在当前loc-dev分支下,则可以只写git push 
-git push origin loc-dev:remote-branch-dev 
-
-//分支拉取 
-git pull origin dev 
-
-//本地分支合并 
-git checkout master(切换到新主干) 
-git merge sie-branch(把分支合并到主干) 
-
-//远程分支合并(多一个远端地址和一个反斜杠/) 
-git merge origin/b 
-git branch(显示当前分支是master) 
-git push(此时主干中也合并了sie-branch的代码) 
-
-//冲突解决(Updated upstream 与==== 之间的是pull下来的内容,若不需要则删除,也可以删除本地的那一行) 
-git stash(暂存本地内容) 
-git pull 
-git stash pop stash@{0}{ stash@{0}修改标记,还原暂存的内容} 
-
-//删除分支(前提是被删除的分支不是当前所在分支,否则删除不了) 
-git pull origin –delete dev 
-//另一种删除分支 
-git push origin :dev 
-
-//消除master分支的追踪 
-设置指定分支 
-git branch –set-upstream-to=origin/dev 
-
-取消对master的跟踪 
-git branch –unset-upstream master
