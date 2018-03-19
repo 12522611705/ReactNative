@@ -13,7 +13,7 @@ export const publicCSS = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#000',
     },
     welcome: {
         fontSize: 20,

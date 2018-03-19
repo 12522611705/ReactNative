@@ -6,8 +6,8 @@
 'use strict'
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TouchableOpacity, Alert, Image } from 'react-native';
-import { publicCSS } from './css/publicCSS';
-import { TEXT } from './utils/publicTEXT';
+// import { publicCSS } from './css/publicCSS';
+// import { TEXT } from './utils/publicTEXT';
 
 export default class Index extends Component<{}> {
     componentWillMount(){
@@ -15,8 +15,8 @@ export default class Index extends Component<{}> {
     }
     render() {
         return (
-            <View style={publicCSS.container}>
-                <Text>hello！ reacr native</Text>
+            <View>
+                <Text>hello! reacr native</Text>
             </View>
         );
     }
