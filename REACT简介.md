@@ -29,3 +29,7 @@ ps:
 
 ```
 
+android ctrl+m 呼出开发者模式菜单
+mac command+d 呼出开发者模式菜单
+
+https://github.com/ninty90/react-native-redux-demo(redux + react-redux + react-native)
